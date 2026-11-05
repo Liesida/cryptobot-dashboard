@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1120">
 <title>CryptoBot V1 Dashboard</title>
 <style>
 *{box-sizing:border-box}
@@ -11,20 +12,24 @@ body{margin:0;background:#0b1120;color:#f1f5f9;font-family:Arial,sans-serif;padd
 main{max-width:850px;margin:auto}
 h1{font-size:26px;margin-bottom:5px}
 .sub{color:#94a3b8;font-size:13px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:22px 0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:20px 0}
 .card{background:#172238;border:1px solid #29364e;border-radius:14px;padding:16px;min-width:0}
 .label{color:#94a3b8;font-size:12px;margin-bottom:10px}
 .value{font-size:22px;font-weight:bold;overflow-wrap:anywhere}
 .green{color:#4ade80}
 .red{color:#fb7185}
-h2{font-size:18px;margin-top:25px}
+.yellow{color:#facc15}
+h2{font-size:18px;margin-top:26px}
 .row{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #334155;font-size:14px}
+.row:last-child{border-bottom:0}
 .row span:last-child{text-align:right;overflow-wrap:anywhere}
 .status{display:inline-block;background:#334155;padding:8px 12px;border-radius:20px;font-size:12px;margin-top:12px}
 .trade{padding:12px 0;border-bottom:1px solid #334155;font-size:13px}
+.trade:last-child{border-bottom:0}
 .trade small{display:block;color:#94a3b8;margin-top:5px}
-button{background:#2563eb;color:white;border:0;border-radius:10px;padding:12px 16px;font-weight:bold}
+button{background:#2563eb;color:white;border:0;border-radius:10px;padding:12px 16px;font-weight:bold;cursor:pointer}
 footer{text-align:center;color:#94a3b8;font-size:12px;margin:28px 0}
+.notice{font-size:12px;color:#94a3b8;line-height:1.6}
 </style>
 </head>
 <body>
@@ -34,37 +39,139 @@ footer{text-align:center;color:#94a3b8;font-size:12px;margin:28px 0}
 <div id="status" class="status">Daten werden geladen...</div>
 
 <div class="grid">
-<div class="card"><div class="label">Gesamtvermögen</div><div id="equity" class="value">–</div></div>
-<div class="card"><div class="label">Gewinn / Verlust</div><div id="profit" class="value">–</div></div>
-<div class="card"><div class="label">Verfügbares Guthaben</div><div id="cash" class="value">–</div></div>
-<div class="card"><div class="label">Bitcoin-Bestand</div><div id="btc" class="value">–</div></div>
-<div class="card"><div class="label">Bitcoin-Kurs</div><div id="price" class="value">–</div></div>
-<div class="card"><div class="label">Anzahl Trades</div><div id="count" class="value">–</div></div>
+<div class="card">
+<div class="label">Gesamtvermögen</div>
+<div id="equity" class="value">–</div>
 </div>
+<div class="card">
+<div class="label">Gewinn / Verlust</div>
+<div id="profit" class="value">–</div>
+</div>
+<div class="card">
+<div class="label">Verfügbares Guthaben</div>
+<div id="cash" class="value">–</div>
+</div>
+<div class="card">
+<div class="label">Bitcoin-Bestand</div>
+<div id="btc" class="value">–</div>
+</div>
+<div class="card">
+<div class="label">Bitcoin-Kurs</div>
+<div id="price" class="value">–</div>
+</div>
+<div class="card">
+<div class="label">Anzahl Trades</div>
+<div id="count" class="value">–</div>
+</div>
+</div>
+
+<h2>📊 Kaufsignal-Monitor</h2>
+<div class="grid">
+<div class="card">
+<div class="label">EMA 20</div>
+<div id="ema20" class="value">–</div>
+</div>
+<div class="card">
+<div class="label">EMA 50</div>
+<div id="ema50" class="value">–</div>
+</div>
+<div class="card">
+<div class="label">RSI 14</div>
+<div id="rsi" class="value">–</div>
+</div>
+<div class="card">
+<div class="label">EMA-Abstand</div>
+<div id="emaDistance" class="value">–</div>
+</div>
+</div>
+
+<div class="card">
+<div class="row">
+<span>EMA-Kreuzung nach oben</span>
+<span id="cross">–</span>
+</div>
+<div class="row">
+<span>RSI-Kaufzone (50–70)</span>
+<span id="rsiStatus">–</span>
+</div>
+<div class="row">
+<span>Position</span>
+<span id="position">–</span>
+</div>
+<div class="row">
+<span>Kaufsignal</span>
+<span id="signal">–</span>
+</div>
+<div class="row">
+<span>Letzte Signalkerze</span>
+<span id="signalTime">–</span>
+</div>
+</div>
+
+<p class="notice">
+Eine kleine EMA-Differenz bedeutet nicht automatisch,
+dass eine Kreuzung bevorsteht. Ein Kauf erfolgt nur,
+wenn alle Bedingungen deiner Strategie erfüllt sind.
+</p>
 
 <h2>Letzte Handelsaktivitäten</h2>
 <div class="card">
-<div class="row"><span>Letzter Kauf</span><span id="buy">Noch kein Kauf</span></div>
-<div class="row"><span>Letzter Verkauf</span><span id="sell">Noch kein Verkauf</span></div>
-<div class="row"><span>Trading-Status</span><span id="halted">–</span></div>
-<div class="row"><span>Letztes Update</span><span id="updated">–</span></div>
+<div class="row">
+<span>Letzter Kauf</span>
+<span id="buy">Noch kein Kauf</span>
+</div>
+<div class="row">
+<span>Letzter Verkauf</span>
+<span id="sell">Noch kein Verkauf</span>
+</div>
+<div class="row">
+<span>Trading-Status</span>
+<span id="halted">–</span>
+</div>
+<div class="row">
+<span>Letztes Update</span>
+<span id="updated">–</span>
+</div>
 </div>
 
 <h2>Handelshistorie</h2>
-<div class="card" id="history">Noch keine Trades vorhanden.</div>
+<div class="card" id="history">
+Noch keine Trades vorhanden.
+</div>
 
 <p><button onclick="loadData()">Jetzt aktualisieren</button></p>
-<footer>CryptoBot V1 · Nur Demohandel · Keine echten Orders</footer>
+
+<footer>
+CryptoBot V1 · Nur Demohandel · Keine echten Orders
+</footer>
 </main>
 
 <script>
 const $=id=>document.getElementById(id);
-const money=n=>Number(n).toLocaleString("de-DE",{minimumFractionDigits:2,maximumFractionDigits:2})+" USDT";
-const date=v=>{
+
+const money=n=>Number(n).toLocaleString(
+ "de-DE",{
+ minimumFractionDigits:2,
+ maximumFractionDigits:2
+ }
+)+" USDT";
+
+const number=n=>Number(n).toLocaleString(
+ "de-DE",{
+ minimumFractionDigits:2,
+ maximumFractionDigits:2
+ }
+);
+
+function date(v){
  if(!v)return "–";
  const d=new Date(v);
- return isNaN(d.getTime())?"–":d.toLocaleString("de-DE",{timeZone:"Europe/Berlin"});
-};
+ return isNaN(d.getTime())?"–":
+ d.toLocaleString("de-DE",{
+  timeZone:"Europe/Berlin"
+ });
+}
+
 function activity(v){
  if(!v)return "Noch keiner";
  if(typeof v==="string")return date(v);
@@ -75,51 +182,146 @@ function activity(v){
  }
  return "–";
 }
+
+function setStatus(id,text,color=""){
+ const el=$(id);
+ el.textContent=text;
+ el.className=color;
+}
+
 async function loadData(){
  try{
-  const r=await fetch("./dashboard.json?t="+Date.now(),{cache:"no-store"});
+  const r=await fetch(
+   "./dashboard.json?t="+Date.now(),
+   {cache:"no-store"}
+  );
   if(!r.ok)throw Error("HTTP "+r.status);
+
   const d=await r.json();
+
   const cash=Number(d.cash||0);
   const btc=Number(d.btc||0);
   const price=Number(d.price||0);
   const equity=cash+btc*price;
   const profit=equity-1000;
+
   $("cash").textContent=money(cash);
   $("btc").textContent=btc.toFixed(8)+" BTC";
   $("price").textContent=money(price);
   $("equity").textContent=money(equity);
   $("profit").textContent=money(profit);
-  $("profit").className="value "+(profit>=0?"green":"red");
+  $("profit").className="value "+(
+   profit>=0?"green":"red"
+  );
+
+  if(d.ema20!=null&&d.ema50!=null&&d.rsi!=null){
+   const ema20=Number(d.ema20);
+   const ema50=Number(d.ema50);
+   const rsi=Number(d.rsi);
+   const distance=ema50!==0?
+    (ema20-ema50)/ema50*100:0;
+
+   $("ema20").textContent=money(ema20);
+   $("ema50").textContent=money(ema50);
+   $("rsi").textContent=number(rsi);
+   $("emaDistance").textContent=
+    distance.toFixed(3).replace(".",",")+" %";
+
+   $("emaDistance").className="value "+(
+    distance>=0?"green":"red"
+   );
+
+   $("rsi").className="value "+(
+    rsi>=50&&rsi<=70?"green":"yellow"
+   );
+
+   setStatus(
+    "cross",
+    d.ema_cross===true?"Ja":"Nein",
+    d.ema_cross===true?"green":""
+   );
+
+   setStatus(
+    "rsiStatus",
+    d.rsi_ok===true?"Erfüllt":"Nicht erfüllt",
+    d.rsi_ok===true?"green":"yellow"
+   );
+
+   setStatus(
+    "position",
+    d.position_open===true?"BTC gehalten":"Keine BTC"
+   );
+
+   setStatus(
+    "signal",
+    d.signal_ready===true?
+     "Kaufbedingungen erfüllt":"Warten",
+    d.signal_ready===true?"green":"yellow"
+   );
+
+   $("signalTime").textContent=date(d.signal_candle);
+  }else{
+   setStatus("signal","Indikatordaten fehlen");
+  }
+
   $("buy").textContent=activity(d.last_buy);
   $("sell").textContent=activity(d.last_sell);
-  $("halted").textContent=d.halted?"Handel pausiert":"Handel erlaubt";
+
+  $("halted").textContent=d.halted?
+   "Handel pausiert":"Handel erlaubt";
+
   $("updated").textContent=date(d.updated_at);
+
   const trades=Array.isArray(d.trades)?d.trades:[];
   $("count").textContent=trades.length;
   $("history").replaceChildren();
+
   if(!trades.length){
    $("history").textContent="Noch keine Trades vorhanden.";
   }else{
    for(const t of [...trades].reverse().slice(0,30)){
     const div=document.createElement("div");
     div.className="trade";
+
     const action=document.createElement("strong");
-    const type=String(t.action||t.side||t.type||"TRADE").toUpperCase();
-    action.textContent=type+" · "+(t.price!=null?money(t.price):"");
-    action.className=type==="BUY"?"green":type==="SELL"?"red":"";
+    const type=String(
+     t.action||t.side||t.type||"TRADE"
+    ).toUpperCase();
+
+    action.textContent=type+" · "+(
+     t.price!=null?money(t.price):""
+    );
+
+    action.className=type==="BUY"?
+     "green":type==="SELL"?"red":"";
+
     const details=document.createElement("small");
-    details.textContent=date(t.utc_time||t.timestamp||t.time)+" · "+(t.btc_quantity??t.quantity??t.qty??"–")+" BTC";
+    details.textContent=date(
+     t.utc_time||t.timestamp||t.time
+    )+" · "+(
+     t.btc_quantity??t.quantity??t.qty??"–"
+    )+" BTC";
+
     div.append(action,details);
     $("history").append(div);
    }
   }
-  const age=Date.now()-new Date(d.updated_at).getTime();
-  $("status").textContent=Number.isFinite(age)&&age>=0&&age<30*60*1000?"● Daten aktuell":"● Daten geladen · Update möglicherweise veraltet";
+
+  const age=Date.now()-new Date(
+   d.updated_at
+  ).getTime();
+
+  $("status").textContent=
+   Number.isFinite(age)&&age>=0&&age<30*60*1000?
+   "● Daten aktuell":
+   "● Daten geladen · Update möglicherweise veraltet";
+
  }catch(e){
-  $("status").textContent="● Daten konnten nicht geladen werden: "+e.message;
+  $("status").textContent=
+   "● Daten konnten nicht geladen werden: "+e.message;
  }
 }
+
 loadData();
 setInterval(loadData,60000);
 </script>
