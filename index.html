@@ -1,1 +1,127 @@
 
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CryptoBot V1 Dashboard</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b1120;color:#f1f5f9;font-family:Arial,sans-serif;padding:18px}
+main{max-width:850px;margin:auto}
+h1{font-size:26px;margin-bottom:5px}
+.sub{color:#94a3b8;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:22px 0}
+.card{background:#172238;border:1px solid #29364e;border-radius:14px;padding:16px;min-width:0}
+.label{color:#94a3b8;font-size:12px;margin-bottom:10px}
+.value{font-size:22px;font-weight:bold;overflow-wrap:anywhere}
+.green{color:#4ade80}
+.red{color:#fb7185}
+h2{font-size:18px;margin-top:25px}
+.row{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #334155;font-size:14px}
+.row span:last-child{text-align:right;overflow-wrap:anywhere}
+.status{display:inline-block;background:#334155;padding:8px 12px;border-radius:20px;font-size:12px;margin-top:12px}
+.trade{padding:12px 0;border-bottom:1px solid #334155;font-size:13px}
+.trade small{display:block;color:#94a3b8;margin-top:5px}
+button{background:#2563eb;color:white;border:0;border-radius:10px;padding:12px 16px;font-weight:bold}
+footer{text-align:center;color:#94a3b8;font-size:12px;margin:28px 0}
+</style>
+</head>
+<body>
+<main>
+<h1>₿ CryptoBot V1</h1>
+<div class="sub">Automatisches Paper-Trading Dashboard</div>
+<div id="status" class="status">Daten werden geladen...</div>
+
+<div class="grid">
+<div class="card"><div class="label">Gesamtvermögen</div><div id="equity" class="value">–</div></div>
+<div class="card"><div class="label">Gewinn / Verlust</div><div id="profit" class="value">–</div></div>
+<div class="card"><div class="label">Verfügbares Guthaben</div><div id="cash" class="value">–</div></div>
+<div class="card"><div class="label">Bitcoin-Bestand</div><div id="btc" class="value">–</div></div>
+<div class="card"><div class="label">Bitcoin-Kurs</div><div id="price" class="value">–</div></div>
+<div class="card"><div class="label">Anzahl Trades</div><div id="count" class="value">–</div></div>
+</div>
+
+<h2>Letzte Handelsaktivitäten</h2>
+<div class="card">
+<div class="row"><span>Letzter Kauf</span><span id="buy">Noch kein Kauf</span></div>
+<div class="row"><span>Letzter Verkauf</span><span id="sell">Noch kein Verkauf</span></div>
+<div class="row"><span>Trading-Status</span><span id="halted">–</span></div>
+<div class="row"><span>Letztes Update</span><span id="updated">–</span></div>
+</div>
+
+<h2>Handelshistorie</h2>
+<div class="card" id="history">Noch keine Trades vorhanden.</div>
+
+<p><button onclick="loadData()">Jetzt aktualisieren</button></p>
+<footer>CryptoBot V1 · Nur Demohandel · Keine echten Orders</footer>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const money=n=>Number(n).toLocaleString("de-DE",{minimumFractionDigits:2,maximumFractionDigits:2})+" USDT";
+const date=v=>{
+ if(!v)return "–";
+ const d=new Date(v);
+ return isNaN(d.getTime())?"–":d.toLocaleString("de-DE",{timeZone:"Europe/Berlin"});
+};
+function activity(v){
+ if(!v)return "Noch keiner";
+ if(typeof v==="string")return date(v);
+ if(typeof v==="object"){
+  const t=v.utc_time||v.timestamp||v.time||v.date;
+  const p=v.price!=null?" · "+money(v.price):"";
+  return (t?date(t):"Erfasst")+p;
+ }
+ return "–";
+}
+async function loadData(){
+ try{
+  const r=await fetch("./dashboard.json?t="+Date.now(),{cache:"no-store"});
+  if(!r.ok)throw Error("HTTP "+r.status);
+  const d=await r.json();
+  const cash=Number(d.cash||0);
+  const btc=Number(d.btc||0);
+  const price=Number(d.price||0);
+  const equity=cash+btc*price;
+  const profit=equity-1000;
+  $("cash").textContent=money(cash);
+  $("btc").textContent=btc.toFixed(8)+" BTC";
+  $("price").textContent=money(price);
+  $("equity").textContent=money(equity);
+  $("profit").textContent=money(profit);
+  $("profit").className="value "+(profit>=0?"green":"red");
+  $("buy").textContent=activity(d.last_buy);
+  $("sell").textContent=activity(d.last_sell);
+  $("halted").textContent=d.halted?"Handel pausiert":"Handel erlaubt";
+  $("updated").textContent=date(d.updated_at);
+  const trades=Array.isArray(d.trades)?d.trades:[];
+  $("count").textContent=trades.length;
+  $("history").replaceChildren();
+  if(!trades.length){
+   $("history").textContent="Noch keine Trades vorhanden.";
+  }else{
+   for(const t of [...trades].reverse().slice(0,30)){
+    const div=document.createElement("div");
+    div.className="trade";
+    const action=document.createElement("strong");
+    const type=String(t.action||t.side||t.type||"TRADE").toUpperCase();
+    action.textContent=type+" · "+(t.price!=null?money(t.price):"");
+    action.className=type==="BUY"?"green":type==="SELL"?"red":"";
+    const details=document.createElement("small");
+    details.textContent=date(t.utc_time||t.timestamp||t.time)+" · "+(t.btc_quantity??t.quantity??t.qty??"–")+" BTC";
+    div.append(action,details);
+    $("history").append(div);
+   }
+  }
+  const age=Date.now()-new Date(d.updated_at).getTime();
+  $("status").textContent=Number.isFinite(age)&&age>=0&&age<30*60*1000?"● Daten aktuell":"● Daten geladen · Update möglicherweise veraltet";
+ }catch(e){
+  $("status").textContent="● Daten konnten nicht geladen werden: "+e.message;
+ }
+}
+loadData();
+setInterval(loadData,60000);
+</script>
+</body>
+</html>
