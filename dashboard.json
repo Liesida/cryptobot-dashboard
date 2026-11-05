@@ -1,7 +1,7 @@
 {
   "cash": 1000.0,
   "btc": 0.0,
-  "price": 78289.9,
+  "price": 76434.1,
   "entry": null,
   "stop": null,
   "take": null,
@@ -9,5 +9,5 @@
   "last_buy": null,
   "last_sell": null,
   "trades": [],
-  "updated_at": "2026-11-05T14:58:49.043822+00:00"
+  "updated_at": "2026-11-05T15:41:32.914383+00:00"
 }
