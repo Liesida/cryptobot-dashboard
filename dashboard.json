@@ -1,21 +1,37 @@
 {
-  "cash": 1000.0,
-  "btc": 0.0,
-  "price": 75907.9,
-  "entry": null,
-  "stop": null,
-  "take": null,
+  "cash": 499.50000000000006,
+  "btc": 0.006582082518252114,
+  "price": 75963.8,
+  "entry": 75963.8,
+  "stop": 74444.524,
+  "take": 79002.352,
   "halted": false,
-  "last_buy": null,
+  "last_buy": {
+    "utc_time": "2026-11-07T00:22:41.403724+00:00",
+    "action": "BUY",
+    "price": "75963.8",
+    "btc_quantity": "0.006582082518252114",
+    "equity": "999.5",
+    "reason": "ema_cross_rsi"
+  },
   "last_sell": null,
-  "trades": [],
-  "ema20": 75883.57,
-  "ema50": 75891.43,
-  "rsi": 51.5,
-  "ema_cross": false,
+  "trades": [
+    {
+      "utc_time": "2026-11-07T00:22:41.403724+00:00",
+      "action": "BUY",
+      "price": "75963.8",
+      "btc_quantity": "0.006582082518252114",
+      "equity": "999.5",
+      "reason": "ema_cross_rsi"
+    }
+  ],
+  "ema20": 75897.12,
+  "ema50": 75896.28,
+  "rsi": 52.55,
+  "ema_cross": true,
   "rsi_ok": true,
   "signal_ready": false,
-  "position_open": false,
-  "signal_candle": "2026-11-06T22:45:00+00:00",
-  "updated_at": "2026-11-06T23:10:07.615588+00:00"
+  "position_open": true,
+  "signal_candle": "2026-11-07T00:00:00+00:00",
+  "updated_at": "2026-11-07T00:22:46.666337+00:00"
 }
