@@ -1,7 +1,7 @@
 {
   "cash": 993.6376824230404,
   "btc": 0.0,
-  "price": 73746.4,
+  "price": 73613.0,
   "entry": null,
   "stop": null,
   "take": null,
@@ -56,13 +56,13 @@
       "reason": "trend_exit"
     }
   ],
-  "ema20": 73888.88,
-  "ema50": 74001.79,
-  "rsi": 45.25,
+  "ema20": 73804.39,
+  "ema50": 73942.39,
+  "rsi": 40.09,
   "ema_cross": false,
   "rsi_ok": false,
   "signal_ready": false,
   "position_open": false,
-  "signal_candle": "2026-11-12T04:00:00+00:00",
-  "updated_at": "2026-11-12T04:29:45.421785+00:00"
+  "signal_candle": "2026-11-12T05:15:00+00:00",
+  "updated_at": "2026-11-12T05:32:10.536743+00:00"
 }
