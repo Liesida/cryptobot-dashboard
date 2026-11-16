@@ -1,17 +1,17 @@
 {
-  "cash": 993.6376824230404,
-  "btc": 0.0,
-  "price": 64903.0,
-  "entry": null,
-  "stop": null,
-  "take": null,
+  "cash": 496.32202237030873,
+  "btc": 0.007616509802535064,
+  "price": 65229.2,
+  "entry": 65229.2,
+  "stop": 63924.615999999995,
+  "take": 67838.368,
   "halted": false,
   "last_buy": {
-    "utc_time": "2026-11-11T16:26:36.520415+00:00",
+    "utc_time": "2026-11-16T02:30:45.373149+00:00",
     "action": "BUY",
-    "price": "74304.6",
-    "btc_quantity": "0.006720148065049258",
-    "equity": "998.18",
+    "price": "65229.2",
+    "btc_quantity": "0.007616509802535064",
+    "equity": "993.14",
     "reason": "ema_cross_rsi"
   },
   "last_sell": {
@@ -54,15 +54,23 @@
       "btc_quantity": "0.006720148065049258",
       "equity": "993.64",
       "reason": "trend_exit"
+    },
+    {
+      "utc_time": "2026-11-16T02:30:45.373149+00:00",
+      "action": "BUY",
+      "price": "65229.2",
+      "btc_quantity": "0.007616509802535064",
+      "equity": "993.14",
+      "reason": "ema_cross_rsi"
     }
   ],
-  "ema20": 65029.76,
-  "ema50": 64995.35,
-  "rsi": 46.22,
-  "ema_cross": false,
-  "rsi_ok": false,
+  "ema20": 64980.02,
+  "ema50": 64976.49,
+  "rsi": 56.57,
+  "ema_cross": true,
+  "rsi_ok": true,
   "signal_ready": false,
-  "position_open": false,
-  "signal_candle": "2026-11-16T01:00:00+00:00",
-  "updated_at": "2026-11-16T01:18:44.304121+00:00"
+  "position_open": true,
+  "signal_candle": "2026-11-16T02:15:00+00:00",
+  "updated_at": "2026-11-16T02:30:50.927315+00:00"
 }
